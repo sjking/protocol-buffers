@@ -68,7 +68,7 @@ instance Random Word8 where
 -}
 
 instance Arbitrary Utf8 where
-  arbitrary = do 
+  arbitrary = do
     len <- frequency
              [ (3, choose (1,3))
              , (1, return 0) ]
@@ -87,12 +87,12 @@ instance Arbitrary L.ByteString where
 instance CoArbitrary L.ByteString where
   coarbitrary s = variant (fromIntegral ((L.length s) `rem` 4))
 
-instance Arbitrary a => Arbitrary (Seq a) where
-  arbitrary = do
-    len <- frequency
-             [ (3, choose (1,3))
-             , (1, return 0) ]
-    fmap Seq.fromList (vector len)
+-- instance Arbitrary a => Arbitrary (Seq a) where
+--   arbitrary = do
+--     len <- frequency
+--              [ (3, choose (1,3))
+--              , (1, return 0) ]
+--     fmap Seq.fromList (vector len)
 
-instance CoArbitrary a => CoArbitrary (Seq a) where
-  coarbitrary s = variant ((Seq.length s) `rem` 4)
+-- instance CoArbitrary a => CoArbitrary (Seq a) where
+--   coarbitrary s = variant ((Seq.length s) `rem` 4)

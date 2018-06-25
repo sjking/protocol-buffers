@@ -14,7 +14,7 @@ stack exec hprotoc -- \
   --unknown_fields `find $PROTO_PATH  -type f | egrep '\.proto$'`
 
 cd "$HASKELL_SRC_PATH"
-EXPOSED_MODULES=`find * -print | egrep '\.hs$' | cut -f 1 -d '.'`
+EXPOSED_MODULES=`find * -print | egrep '\.hs$' | cut -f 1 -d '.' | tr / .`
 cd -
 
 display_modules () {
@@ -30,7 +30,7 @@ synopsis:            Protocol buffer types auto-generated package for testing pr
 author:              Nobody
 maintainer:          nobody@example.com
 build-type:          Simple
-cabal-version:       >= 1.10
+cabal-version:       >= 1.8
 library
   exposed-modules:`display_modules "$EXPOSED_MODULES"`
   build-depends:        base
