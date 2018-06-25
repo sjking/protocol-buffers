@@ -1,24 +1,43 @@
 module Text.ProtocolBuffers.Tests.AddressBook (addressBookTest) where
 
-import Data.Text (Text)
-import Data.Map (Map, fromList)
+import Test.HUnit (TestCase, assertEqual, assertBool)
+-- import Data.Text (Text)
+-- import Data.Map (Map, fromList)
 import qualified Data.Sequence as Seq
 import Data.Sequence (Seq)
+import qualified Data.ByteString.Lazy.Char8 as LB
 
--- import Text.ProtocolBuffers.Basic
-import Text.ProtocolBuffers.Header (uFromString, Default(..))
--- import Text.ProtocolBuffers.TextMessage
+import Text.ProtocolBuffers.Basic
+import Text.ProtocolBuffers.Header
+import Text.ProtocolBuffers.TextMessage
+import Text.ProtocolBuffers.WireMessage
+
+-- import Text.ProtocolBuffers.Basic (uFromString, Default(..))
+-- import Text.ProtocolBuffers.Header (uFromString)
+-- import Text.ProtocolBuffers.TextMessage (messagePut, messageGetText)
 -- import Text.ProtocolBuffers.WireMessage
-import Text.ProtocolBuffers.Unknown ()
+-- import Text.ProtocolBuffers.Unknown ()
 
 import qualified HSCodeGen.AddressBookProtos.AddressBook        as AddressBook'
 import qualified HSCodeGen.AddressBookProtos.Person             as Person'
 import qualified HSCodeGen.AddressBookProtos.Person.PhoneNumber as PhoneNumber'
--- import qualified HSCodeGen.AddressBookProtos.Person.PhoneType   as PhoneType'
 import HSCodeGen.AddressBookProtos.AddressBook        (AddressBook(..))
 import HSCodeGen.AddressBookProtos.Person             (Person(..))
 import HSCodeGen.AddressBookProtos.Person.PhoneNumber (PhoneNumber(..))
 import HSCodeGen.AddressBookProtos.Person.PhoneType   (PhoneType(..))
+
+-- messageGetText :: (TextMsg a, Stream s Identity Char) => s -> Either String a
+-- messagePutText :: TextMsg a => a -> String
+addressBookTest :: TestCase
+addressBookTest = assertBool "Address book encoded then decoded round-trip should be equivalent"
+                             roundTripEncodeDecode
+                    where
+                      roundTripEncodeDecode =
+                        let encoded = messagePutText addressBook
+                            decoded = case messageGetText $ LB.pack encoded of
+                                        Left -> False
+                                        Right result -> msg == addressBook
+
 
 addressBook :: AddressBook
 addressBook =
@@ -49,5 +68,3 @@ mkPhoneNumbers = fmap mkPhoneNumbers' where
     , PhoneNumber'.unknown'field = defaultValue
     }
 
-addressBookTest :: IO ()
-addressBookTest = return ()

@@ -5,8 +5,11 @@ module Text.ProtocolBuffers.Tests
   )
   where
 
+-- import Test.HUnit (TestCase, assertEqual, runTestTT)
+import Test.HUnit (runTestTT)
+
 import Text.ProtocolBuffers.Tests.AddressBook (addressBookTest)
 
-tests :: [IO ()]
-tests =
+tests :: IO ()
+tests = runTestTT
   [ addressBookTest ]

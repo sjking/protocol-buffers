@@ -84,7 +84,8 @@ test-suite protobuf-tests
                -- , bytestring
                -- , utf8-string
 
-  other-modules: Text.ProtocolBuffers.Tests
+  other-modules:
+                 Text.ProtocolBuffers.Tests
                , Text.ProtocolBuffers.Tests.AddressBook
 
                , HSCodeGen.AddressBookProtos.AddressBook
