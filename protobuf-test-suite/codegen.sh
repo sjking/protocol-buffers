@@ -16,12 +16,17 @@ EXPOSED_MODULES=`find * -print | egrep '\.hs$' | egrep "$PROTO_PREFIX" | cut -f 
 cd -
 
 display_modules () {
-  for i in ${EXPOSED_MODULES}; do
-    printf "\n%8s$i";
+  for i in ${1}; do
+    printf "\n%"$2"s$i";
   done
 }
 
-cat << EOF > "protobuf-test-suite.cabal"
+CABAL_FILE="protobuf-test-suite.cabal"
+
+OTHER_MODULES=""
+[ -f "$CABAL_FILE" ] && OTHER_MODULES=`egrep 'other-modules' "$CABAL_FILE" -A10000`
+
+cat << EOF > "$CABAL_FILE"
 name:                protobuf-test-suite
 version:             0.1.0.0
 synopsis:            Protocol buffers auto-generated test suite package for testing protobuf codegen and serdes
@@ -30,7 +35,7 @@ maintainer:          nobody@example.com
 build-type:          Simple
 cabal-version:       >= 1.8
 library
-  exposed-modules:`display_modules "$EXPOSED_MODULES"`
+  exposed-modules:`display_modules "$EXPOSED_MODULES" 8`
   build-depends:        base
                       , filepath
                       , process
@@ -53,8 +58,5 @@ test-suite protobuf-tests
                , containers
                , HUnit
                , bytestring
-
-  other-modules:
-                 Text.ProtocolBuffers.Tests
-               , Text.ProtocolBuffers.Tests.AddressBook
+$OTHER_MODULES
 EOF

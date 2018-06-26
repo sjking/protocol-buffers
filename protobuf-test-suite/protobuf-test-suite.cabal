@@ -34,7 +34,6 @@ test-suite protobuf-tests
                , containers
                , HUnit
                , bytestring
-
   other-modules:
-                 Text.ProtocolBuffers.Tests
-               , Text.ProtocolBuffers.Tests.AddressBook
+      Text.ProtocolBuffers.Tests
+    , Text.ProtocolBuffers.Tests.AddressBook
