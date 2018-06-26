@@ -1,8 +1,6 @@
 module Text.ProtocolBuffers.Tests.AddressBook (addressBookTest) where
 
-import Test.HUnit (TestCase, assertEqual, assertBool)
--- import Data.Text (Text)
--- import Data.Map (Map, fromList)
+import Test.HUnit (Test(TestCase), assertBool)
 import qualified Data.Sequence as Seq
 import Data.Sequence (Seq)
 import qualified Data.ByteString.Lazy.Char8 as LB
@@ -12,12 +10,6 @@ import Text.ProtocolBuffers.Header
 import Text.ProtocolBuffers.TextMessage
 import Text.ProtocolBuffers.WireMessage
 
--- import Text.ProtocolBuffers.Basic (uFromString, Default(..))
--- import Text.ProtocolBuffers.Header (uFromString)
--- import Text.ProtocolBuffers.TextMessage (messagePut, messageGetText)
--- import Text.ProtocolBuffers.WireMessage
--- import Text.ProtocolBuffers.Unknown ()
-
 import qualified HSCodeGen.AddressBookProtos.AddressBook        as AddressBook'
 import qualified HSCodeGen.AddressBookProtos.Person             as Person'
 import qualified HSCodeGen.AddressBookProtos.Person.PhoneNumber as PhoneNumber'
@@ -26,18 +18,18 @@ import HSCodeGen.AddressBookProtos.Person             (Person(..))
 import HSCodeGen.AddressBookProtos.Person.PhoneNumber (PhoneNumber(..))
 import HSCodeGen.AddressBookProtos.Person.PhoneType   (PhoneType(..))
 
--- messageGetText :: (TextMsg a, Stream s Identity Char) => s -> Either String a
--- messagePutText :: TextMsg a => a -> String
-addressBookTest :: TestCase
-addressBookTest = assertBool "Address book encoded then decoded round-trip should be equivalent"
-                             roundTripEncodeDecode
-                    where
-                      roundTripEncodeDecode =
-                        let encoded = messagePutText addressBook
-                            decoded = case messageGetText $ LB.pack encoded of
-                                        Left -> False
-                                        Right result -> msg == addressBook
+addressBookTest :: Test
+addressBookTest = TestCase $
+  assertBool "Address book encoded then decoded round-trip should be equivalent"
+             roundTripEncodeDecode
 
+roundTripEncodeDecode :: Bool
+roundTripEncodeDecode =
+  let encoded = messagePutText addressBook
+      decoded = case messageGetText $ LB.pack encoded of
+                  Left _ -> False
+                  Right result -> result == addressBook
+  in decoded
 
 addressBook :: AddressBook
 addressBook =
@@ -53,7 +45,7 @@ mkPerson :: String -> Int -> Maybe String -> Seq (String, PhoneType) -> Person
 mkPerson name id email phoneNumbers =
   Person {
     Person'.name = uFromString name
-  , Person'.id = id
+  , Person'.id = fromIntegral id
   , Person'.email = uFromString <$> email
   , Person'.phone = mkPhoneNumbers phoneNumbers
   , Person'.unknown'field = defaultValue
@@ -64,7 +56,7 @@ mkPhoneNumbers = fmap mkPhoneNumbers' where
   mkPhoneNumbers' (num, t) =
     PhoneNumber {
       PhoneNumber'.number = uFromString num
-    , PhoneNumber'.type' = t
+    , PhoneNumber'.type' = Just t
     , PhoneNumber'.unknown'field = defaultValue
     }
 

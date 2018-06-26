@@ -3,7 +3,7 @@ build:
 .PHONY: build
 
 codegen:
-	hprotoc/tests/codegen.sh
+	protobuf-test-suite/codegen.sh
 
 test: codegen
-	stack --stack-yaml stack-test.yaml test
+	stack --stack-yaml stack-test.yaml test protobuf-test-suite

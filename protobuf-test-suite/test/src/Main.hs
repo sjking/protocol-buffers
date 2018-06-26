@@ -1,6 +1,8 @@
 module Main where
 
+import Test.HUnit (Counts)
+
 import Text.ProtocolBuffers.Tests (tests)
 
-main :: IO ()
+main :: IO Counts
 main = tests

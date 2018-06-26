@@ -67,30 +67,4 @@ Library
                    StandaloneDeriving,
                    TypeSynonymInstances
 
-test-suite protobuf-tests
-  build-depends:   protocol-buffers,
-                   protocol-buffers-descriptor
-  type: exitcode-stdio-1.0
-
-  main-is:        Main.hs
-  hs-source-dirs: tests/src
-
-  build-depends: base >= 4.7.0 && < 5
-               , text
-               , containers
-               -- , QuickCheck
-               -- , random
-               -- , containers
-               -- , bytestring
-               -- , utf8-string
-
-  other-modules:
-                 Text.ProtocolBuffers.Tests
-               , Text.ProtocolBuffers.Tests.AddressBook
-
-               , HSCodeGen.AddressBookProtos.AddressBook
-               , HSCodeGen.AddressBookProtos.Person.PhoneNumber
-               , HSCodeGen.AddressBookProtos.Person.PhoneType
-               , HSCodeGen.AddressBookProtos.Person
-               , HSCodeGen.AddressBookProtos
 
